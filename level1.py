@@ -25,23 +25,20 @@ playerX = 555
 playerY = 500
 playerX_change = 0
 
-asteroidImg1 = pygame.image.load('asteroid.png')
-asteroidImg = []
+asteroidImg = pygame.image.load('asteroid.png')
+asteroidImg = pygame.transform.scale(asteroidImg, (100, 100))
 asteroidX = []
 asteroidY = []
 asteroidY_change = []
-num_of_asteroids = 3
 explosionTime = []
 explosionX = []
 
 explosionImg1 = pygame.image.load('explosion.png')
 explosionImg = pygame.transform.scale(explosionImg1, (100, 100))
 
-for i in range(num_of_asteroids):
-    asteroidImg.append(pygame.transform.scale(asteroidImg1, (100, 100)))
-    asteroidX.append(random.randint(0, 824))
-    asteroidY.append(random.randint(0, 150))
-    asteroidY_change.append(random.randint(10, 20) / 10)
+asteroidX.append(random.randint(0, 824))
+asteroidY.append(random.randint(0, 150))
+asteroidY_change.append(random.randint(20, 30) / 10)
 
 
 def player(x, y):
@@ -50,7 +47,7 @@ def player(x, y):
 
 
 def asteroid(x, y, i):
-    screen.blit(asteroidImg[i], (x, y))
+    screen.blit(asteroidImg, (x, y))
     return
 
 
@@ -102,6 +99,10 @@ while running:
             asteroidY.remove(asteroidY[i])
             asteroidX.remove(asteroidX[i])
             i += 1
+            asteroidX.append(random.randint(0, 824))
+            asteroidY.append(random.randint(0, 150))
+            asteroidY_change.append(random.randint(10, 20) / 10)
+
         else:
             asteroid(asteroidX[i], asteroidY[i], i)
             asteroidY[i] += asteroidY_change[i]
