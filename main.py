@@ -1,15 +1,12 @@
 import pygame
 pygame.init()
 
-print("banana")
-
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode([1080, 720])
 run = True
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
     screen.fill((255, 255, 255))
-    pygame.draw.circle(screen, (0, 0, 0), (250, 250), 100)
     pygame.display.flip()
 pygame.quit()
