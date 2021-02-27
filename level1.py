@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 screen = pygame.display.set_mode([1080, 620])
 
@@ -12,7 +13,7 @@ pygame.display.set_icon(icon)
 
 # background
 backgroundImg = pygame.image.load("Background.jpg")
-background = pygame.transform.scale(backgroundImg, (1700, 768))
+background = pygame.transform.scale(backgroundImg, (1380, 620))
 
 # Player
 playerImg1 = pygame.image.load('player.png')
@@ -21,7 +22,7 @@ playerImg = player_right
 player_left = pygame.transform.flip(playerImg, True, False)
 
 playerX = 555
-playerY = 510
+playerY = 500
 playerX_change = 0
 
 asteroidImg1 = pygame.image.load('asteroid.png')
@@ -30,34 +31,42 @@ asteroidX = []
 asteroidY = []
 asteroidY_change = []
 num_of_asteroids = 3
+explosionTime = []
+explosionX = []
 
 explosionImg1 = pygame.image.load('explosion.png')
-explosionImg = pygame.transform.scale(explosionImg1, (256, 256))
+explosionImg = pygame.transform.scale(explosionImg1, (100, 100))
 
 for i in range(num_of_asteroids):
     asteroidImg.append(pygame.transform.scale(asteroidImg1, (100, 100)))
-    asteroidX.append(random.randint(0, 900))
+    asteroidX.append(random.randint(0, 824))
     asteroidY.append(random.randint(0, 150))
-    asteroidY_change.append(random.randint(2, 6) / 10)
+    asteroidY_change.append(random.randint(6, 18) / 10)
 
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
+    return
 
 
 def asteroid(x, y, i):
     screen.blit(asteroidImg[i], (x, y))
+    return
 
 
-def explosion(x, y, i):
+def explosion(x, y):
     screen.blit(explosionImg, (x, y))
+    return
+
+
+def death():
+    print("Game Over")
+    return
 
 
 running = True
 
 while running:
-
-    screen.fill((255, 255, 255))
     screen.blit(background, (-100, 0))
 
     for event in pygame.event.get():
@@ -68,10 +77,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 playerImg = player_left
-                playerX_change = -3
+                playerX_change = -2.4
             if event.key == pygame.K_RIGHT:
                 playerImg = player_right
-                playerX_change = 3
+                playerX_change = 2.4
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
@@ -84,14 +93,31 @@ while running:
         playerX = 952
 
     # Enemy movement
-    for i in range(num_of_asteroids):
+    i = 0
+    for asteroids in asteroidX:
+        # Meteor Hits
+        if asteroidY[i] > 520:
+            explosionX.append(asteroidX[i])
+            explosionTime.append([time.time(), asteroidX[i]])
+            asteroidY.remove(asteroidY[i])
+            asteroidX.remove(asteroidX[i])
+            i += 1
+            continue
         asteroid(asteroidX[i], asteroidY[i], i)
         asteroidY[i] += asteroidY_change[i]
-
-        # Game over
-        if asteroidY[i] > 420:
-            explosion(asteroidX[i], 420, i)
-            break
+    for timestamp in explosionTime:
+        if time.time() - timestamp[0] >= 3:
+            explosionTime.remove(timestamp)
+            explosionX.remove(timestamp[1])
+        else:
+            if timestamp[1] < playerX + 100 < timestamp[1] + 200:
+                death()
+                break
+    if len(explosionX) <= 0:
+        pass
+    else:
+        for explosions in explosionX:
+            explosion(explosions, 500)
 
     player(playerX, playerY)
     pygame.display.update()
