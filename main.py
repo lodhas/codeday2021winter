@@ -1,6 +1,7 @@
 import pygame
 pygame.init()
 
+print("banana")
 
 screen = pygame.display.set_mode([500, 500])
 run = True
