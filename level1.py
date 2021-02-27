@@ -41,7 +41,7 @@ for i in range(num_of_asteroids):
     asteroidImg.append(pygame.transform.scale(asteroidImg1, (100, 100)))
     asteroidX.append(random.randint(0, 824))
     asteroidY.append(random.randint(0, 150))
-    asteroidY_change.append(random.randint(6, 18) / 10)
+    asteroidY_change.append(random.randint(10, 20) / 10)
 
 
 def player(x, y):
@@ -102,9 +102,9 @@ while running:
             asteroidY.remove(asteroidY[i])
             asteroidX.remove(asteroidX[i])
             i += 1
-            continue
-        asteroid(asteroidX[i], asteroidY[i], i)
-        asteroidY[i] += asteroidY_change[i]
+        else:
+            asteroid(asteroidX[i], asteroidY[i], i)
+            asteroidY[i] += asteroidY_change[i]
     for timestamp in explosionTime:
         if time.time() - timestamp[0] >= 3:
             explosionTime.remove(timestamp)
