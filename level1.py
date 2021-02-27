@@ -101,7 +101,7 @@ while running:
             i += 1
             asteroidX.append(random.randint(0, 824))
             asteroidY.append(random.randint(0, 150))
-            asteroidY_change.append(random.randint(10, 20) / 10)
+            asteroidY_change.append(random.randint(20, 30) / 10)
 
         else:
             asteroid(asteroidX[i], asteroidY[i], i)
