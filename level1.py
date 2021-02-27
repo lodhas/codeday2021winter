@@ -1,7 +1,7 @@
 import pygame
 import random
 
-screen = pygame.display.set_mode([1366, 768])
+screen = pygame.display.set_mode([1080, 620])
 
 pygame.init()
 
@@ -21,7 +21,7 @@ playerImg = player_right
 player_left = pygame.transform.flip(playerImg, True, False)
 
 playerX = 555
-playerY = 600
+playerY = 510
 playerX_change = 0
 
 asteroidImg1 = pygame.image.load('asteroid.png')
@@ -36,7 +36,7 @@ explosionImg = pygame.transform.scale(explosionImg1, (256, 256))
 
 for i in range(num_of_asteroids):
     asteroidImg.append(pygame.transform.scale(asteroidImg1, (100, 100)))
-    asteroidX.append(random.randint(0, 1238))
+    asteroidX.append(random.randint(0, 900))
     asteroidY.append(random.randint(0, 150))
     asteroidY_change.append(random.randint(2, 6) / 10)
 
@@ -68,10 +68,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 playerImg = player_left
-                playerX_change = -0.8
+                playerX_change = -3
             if event.key == pygame.K_RIGHT:
                 playerImg = player_right
-                playerX_change = 0.8
+                playerX_change = 3
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
@@ -80,8 +80,8 @@ while running:
 
     if playerX <= 0:
         playerX = 0
-    elif playerX >= 1238:
-        playerX = 1238
+    elif playerX >= 952:
+        playerX = 952
 
     # Enemy movement
     for i in range(num_of_asteroids):
@@ -89,8 +89,8 @@ while running:
         asteroidY[i] += asteroidY_change[i]
 
         # Game over
-        if asteroidY[i] > 528:
-            explosion(asteroidX[i], 450, i)
+        if asteroidY[i] > 420:
+            explosion(asteroidX[i], 420, i)
             break
 
     player(playerX, playerY)
