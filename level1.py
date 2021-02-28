@@ -169,7 +169,6 @@ while running:
         alien(alienX[i], alienY)
         alienX[i] += alienX_change[i]
 
-    collision =
 
 
     player(playerX, playerY)
