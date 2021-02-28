@@ -34,9 +34,9 @@ num_of_aliens = 6
 for i in range(num_of_aliens):
     startloc = alien_starting_location[random.randint(0, 1)]
     if startloc == 0:
-        change = random.randint(2, 4) / 10
+        change = random.randint(1, 2) / 10
     elif startloc == 1000:
-        change = random.randint(2, 4) / -10
+        change = random.randint(1, 2) / -10
     aliens.append([startloc, change])
 
 playerX = 555
@@ -110,7 +110,7 @@ while running:
                 direction = True
                 playerX_change = 0.6
             if event.key == pygame.K_SPACE:
-                if time.time() - shottime > 0.5:
+                if time.time() - shottime > 0.4:
                     print("shot")
                     screen.blit(bulletright if direction else bulletleft,
                                 (playerX + 128 if direction else playerX - 30, 550))
@@ -174,9 +174,9 @@ while running:
                     bullets.remove(x)
                     startloc = alien_starting_location[random.randint(0, 1)]
                     if startloc == 0:
-                        change = random.randint(2, 4) / 10
+                        change = random.randint(1, 2) / 10
                     elif startloc == 1000:
-                        change = random.randint(2, 4) / -10
+                        change = random.randint(1, 2) / -10
                     aliens.append([startloc, change])
                     break
     for thing in aliens:

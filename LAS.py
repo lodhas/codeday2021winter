@@ -3,6 +3,8 @@ import random
 import time
 
 screen = pygame.display.set_mode([1080, 620])
+death_screenImg = pygame.image.load("Death Screen.png")
+death_screen = pygame.transform.scale(death_screenImg, (1080, 620))
 
 pygame.init()
 
@@ -14,6 +16,7 @@ pygame.display.set_icon(icon)
 # background
 backgroundImg = pygame.image.load("Background.jpg")
 background = pygame.transform.scale(backgroundImg, (1380, 620))
+
 
 # Player
 playerImg1 = pygame.image.load('player.png')
@@ -57,13 +60,34 @@ asteroidY.append(random.randint(0, 150))
 asteroidY_change.append(random.randint(2, 3) / 10)
 
 
+# score
+
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+textX = 10
+textY = 10
+# Game over text
+
+over_font = font = pygame.font.Font('freesansbold.ttf', 64)
+
+
+def getscore():
+    score_value = int((time.time() - start)*100//1)
+    return score_value
+
+
+def show_score(x, y):
+    score_value = getscore()
+    score = font.render("Score: " + str(score_value), True, (255, 255, 255))
+    screen.blit(score, (x, y))
+
+
 def player(x, y):
     screen.blit(playerImg, (x, y))
     return
 
 
 def alien(x, y):
-    print("entered function")
     screen.blit(alienImg, (x, y))
     return
 
@@ -79,11 +103,16 @@ def explosion(x, y):
 
 
 def death():
+    global end
     print("Game Over")
+    end = time.time()
+    play_again = False
+    screen.blit(death_screen, (0, 0))
     return
 
 
 running = True
+start = time.time()
 
 while running:
     screen.blit(background, (-100, 0))
@@ -133,9 +162,13 @@ while running:
             explosionTime.remove(timestamp)
             explosionX.remove(timestamp[1])
         else:
+
             if timestamp[1] < playerX + 100 < timestamp[1] + 200:
                 death()
-                break
+            break
+
+
+
     if len(explosionX) <= 0:
         pass
     else:
@@ -146,5 +179,7 @@ while running:
         alien(alienX[i], alienY)
         alienX[i] += alienX_change[i]
 
+
+    show_score(0, 0)
     player(playerX, playerY)
     pygame.display.update()
