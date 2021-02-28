@@ -88,7 +88,6 @@ def show_score(x, y):
     score_value = getscore()
     score = font.render("Score: " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
-    print("change")
 
 
 def player(x, y):
