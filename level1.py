@@ -296,6 +296,8 @@ while running:
         pygame.display.update()
     else:
         screen.blit(deathscreen, (0, 0))
+        score = font.render(str(getscore()), True, (255, 255, 255))
+        screen.blit(score, (515, 315))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
