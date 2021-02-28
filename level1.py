@@ -159,7 +159,7 @@ while running:
         pass
     else:
         for x in bullets:
-            if x[1] >= 1080:
+            if x[1] >= 1080 or x[1] <= 0:
                 bullets.remove(x)
             else:
                 screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
