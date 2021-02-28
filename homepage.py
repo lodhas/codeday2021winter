@@ -50,9 +50,6 @@ while run:
             if 689 > pos[0] > 409 and 451 > pos[1] > 363 and status == 0:
                 mode = 1
                 print(mode)
-            #if 687 > pos[0] > 409 and 581 > pos[1] > 493 and status == 0:
-            #    mode = 2
-            #    print(mode)
             if 1058 > pos[0] > 975 and 85 > pos[1] > 11 and status == 0:
                 mode = 3
                 help()

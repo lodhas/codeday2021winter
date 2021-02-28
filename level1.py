@@ -80,7 +80,7 @@ over_font = font = pygame.font.Font('freesansbold.ttf', 64)
 
 
 def getscore():
-    score_value = int((time.time() - start)*100//1)
+    score_value = int((time.time() - starttime)*100//1)
     return score_value
 
 
@@ -119,6 +119,7 @@ def death():
 direction = False
 running = True
 shottime = 0
+starttime = time.time()
 while running:
     start = time.time()
     screen.blit(background, (-100, 0))
@@ -207,8 +208,6 @@ while running:
                         change = random.randint(1, 2) / -10
                     aliens.append([startloc, change])
                     break
-
-
     for thing in aliens:
         if playerX < thing[0] < playerX + 128:
             death()
@@ -216,7 +215,6 @@ while running:
     for i in range(num_of_aliens):
         alien(aliens[i][0], 530)
         aliens[i][0] += aliens[i][1]
-
     show_score(0, 0)
     player(playerX, playerY)
     pygame.display.update()
