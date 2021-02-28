@@ -64,6 +64,28 @@ asteroidY.append(random.randint(0, 150))
 asteroidY_change.append(random.randint(2, 3) / 10)
 
 
+# score
+
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+textX = 10
+textY = 10
+# Game over text
+
+over_font = font = pygame.font.Font('freesansbold.ttf', 64)
+
+
+def getscore():
+    score_value = int((time.time() - start)*100//1)
+    return score_value
+
+
+def show_score(x, y):
+    score_value = getscore()
+    score = font.render("Score: " + str(score_value), True, (255, 255, 255))
+    screen.blit(score, (x, y))
+
+
 def player(x, y):
     screen.blit(playerImg, (x, y))
     return
@@ -93,6 +115,7 @@ running = True
 direction = False
 shottime = 0
 while running:
+    start = time.time()
     screen.blit(background, (-100, 0))
 
     for event in pygame.event.get():
@@ -186,5 +209,7 @@ while running:
     for i in range(num_of_aliens):
         alien(aliens[i][0], 530)
         aliens[i][0] += aliens[i][1]
+
+    show_score(0, 0)
     player(playerX, playerY)
     pygame.display.update()
