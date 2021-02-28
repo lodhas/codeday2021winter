@@ -27,15 +27,17 @@ alienImg1 = pygame.image.load('alien.png')
 alienImg = pygame.transform.scale(alienImg1, (80, 80))
 alienX = []
 alienY = 530
+aliens = []
 alienX_change = []
 num_of_aliens = 6
 
 for i in range(num_of_aliens):
-    alienX.append(alien_starting_location[random.randint(0, 1)])
-    if alienX[i] == 0:
-        alienX_change.append(random.randint(2, 4) / 10)
-    if alienX[i] == 1000:
-        alienX_change.append(random.randint(2, 4) / -10)
+    startloc = alien_starting_location[random.randint(0, 1)]
+    if startloc == 0:
+        change = random.randint(2, 4) / 10
+    elif startloc == 1000:
+        change = random.randint(2, 4) / -10
+    aliens.append([startloc, change])
 
 playerX = 555
 playerY = 500
@@ -164,10 +166,23 @@ while running:
             else:
                 screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
                 x[1] = x[1] + 3 if x[0] else x[1] - 3
+            for i in range(6):
+                if aliens[i][0] < x[1] < aliens[i][0] + 80:
+                    aliens.remove(aliens[i])
+                    print(bullets)
+                    print(x)
+                    bullets.remove(x)
+                    startloc = alien_starting_location[random.randint(0, 1)]
+                    if startloc == 0:
+                        change = random.randint(2, 4) / 10
+                    elif startloc == 1000:
+                        change = random.randint(2, 4) / -10
+                    aliens.append([startloc, change])
+                    break
+
 
     for i in range(num_of_aliens):
-        alien(alienX[i], alienY)
-        alienX[i] += alienX_change[i]
-
+        alien(aliens[i][0], 530)
+        aliens[i][0] += aliens[i][1]
     player(playerX, playerY)
     pygame.display.update()
