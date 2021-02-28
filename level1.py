@@ -6,6 +6,12 @@ screen = pygame.display.set_mode([1080, 620])
 
 pygame.init()
 
+# alien death sound
+oof = pygame.mixer.Sound("thetrueoof.wav")
+
+# laser sound
+laser = pygame.mixer.Sound("laser.wav")
+
 # play again screen
 play_again = pygame.image.load("Death Screen.png")
 deathscreen = pygame.transform.scale(play_again, (1080, 620))
@@ -157,6 +163,7 @@ while running:
                                     (playerX + 128 if direction else playerX - 30, 550))
                         bullets.append([direction, playerX + 128 if direction else playerX - 30])
                         shottime = time.time()
+                        pygame.mixer.Sound.play(laser)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     playerX_change = 0
@@ -209,9 +216,8 @@ while running:
                     x[1] = x[1] + 3 if x[0] else x[1] - 3
                 for i in range(6):
                     if aliens[i][0] < x[1] < aliens[i][0] + 80:
+                        pygame.mixer.Sound.play(oof)
                         aliens.remove(aliens[i])
-                        print(bullets)
-                        print(x)
                         bullets.remove(x)
                         startloc = alien_starting_location[random.randint(0, 1)]
                         if startloc == 0:
