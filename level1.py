@@ -7,8 +7,8 @@ screen = pygame.display.set_mode([1080, 620])
 pygame.init()
 
 # caption and Icon
-pygame.display.set_caption("Spacecape")
-icon = pygame.image.load('alien.png')
+pygame.display.set_caption("SpacEscape")
+icon = pygame.image.load('player.png')
 pygame.display.set_icon(icon)
 
 # background
@@ -20,6 +20,22 @@ playerImg1 = pygame.image.load('player.png')
 player_right = pygame.transform.scale(playerImg1, (128, 128))
 playerImg = player_right
 player_left = pygame.transform.flip(playerImg, True, False)
+
+# aliens
+alien_starting_location = [0, 1000]
+alienImg1 = pygame.image.load('alien.png')
+alienImg = pygame.transform.scale(alienImg1, (80, 80))
+alienX = []
+alienY = 530
+alienX_change = []
+num_of_aliens = 6
+
+for i in range(num_of_aliens):
+    alienX.append(alien_starting_location[random.randint(0, 1)])
+    if alienX[i] == 0:
+        alienX_change.append(random.randint(2, 4) / 10)
+    if alienX[i] == 1000:
+        alienX_change.append(random.randint(2, 4) / -10)
 
 playerX = 555
 playerY = 500
@@ -43,11 +59,16 @@ bullets = []
 
 asteroidX.append(random.randint(0, 824))
 asteroidY.append(random.randint(0, 150))
-asteroidY_change.append(random.randint(20, 30) / 10)
+asteroidY_change.append(random.randint(2, 3) / 10)
 
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
+    return
+
+
+def alien(x, y):
+    screen.blit(alienImg, (x, y))
     return
 
 
@@ -81,11 +102,11 @@ while running:
             if event.key == pygame.K_LEFT:
                 playerImg = player_left
                 direction = False
-                playerX_change = -2.4
+                playerX_change = -0.6
             if event.key == pygame.K_RIGHT:
                 playerImg = player_right
                 direction = True
-                playerX_change = 2.4
+                playerX_change = 0.6
             if event.key == pygame.K_SPACE:
                 if time.time() - shottime > 0.5:
                     print("shot")
@@ -141,7 +162,15 @@ while running:
             if x[1] >= 1080:
                 bullets.remove(x)
             else:
-                screen.blit(bulletright if x[0] else bulletleft, (x[1] + 30 if x[0] else x[1] - 30, 550))
-                x[1] = x[1] + 30 if x[0] else x[1] - 30
+                screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
+                x[1] = x[1] + 3 if x[0] else x[1] - 3
+
+    for i in range(num_of_aliens):
+        alien(alienX[i], alienY)
+        alienX[i] += alienX_change[i]
+
+    collision =
+
+
     player(playerX, playerY)
     pygame.display.update()
