@@ -6,9 +6,13 @@ screen = pygame.display.set_mode([1080, 620])
 
 pygame.init()
 
+# play again screen
+play_again = pygame.image.load("Death Screen.png")
+deathscreen = pygame.transform.scale(play_again, (1080, 620))
+
 # caption and Icon
 pygame.display.set_caption("SpacEscape")
-icon = pygame.image.load('player.png')
+icon = pygame.image.load('alien.png')
 pygame.display.set_icon(icon)
 
 # background sound
@@ -77,10 +81,13 @@ textY = 10
 # Game over text
 
 over_font = font = pygame.font.Font('freesansbold.ttf', 64)
+alive = True
 
 
 def getscore():
-    score_value = int((time.time() - starttime)*100//1)
+    global alive
+    global deathtime
+    score_value = int(((time.time() if alive else deathtime) - starttime)*100//1)
     return score_value
 
 
@@ -111,110 +118,149 @@ def explosion(x, y):
 
 
 def death():
+    global alive
+    global deathtime
+    deathtime = time.time()
     print("Game Over")
+    alive = False
+
     return
 
 
-
+deathtime = 0
 direction = False
 running = True
 shottime = 0
 starttime = time.time()
 while running:
-    start = time.time()
-    screen.blit(background, (-100, 0))
+    if alive:
+        start = time.time()
+        screen.blit(background, (-100, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+            # if keystroke is pressed check whether its right or left
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    playerImg = player_left
+                    direction = False
+                    playerX_change = -0.6
+                if event.key == pygame.K_RIGHT:
+                    playerImg = player_right
+                    direction = True
+                    playerX_change = 0.6
+                if event.key == pygame.K_SPACE:
+                    if time.time() - shottime > 0.4:
+                        print("shot")
+                        screen.blit(bulletright if direction else bulletleft,
+                                    (playerX + 128 if direction else playerX - 30, 550))
+                        bullets.append([direction, playerX + 128 if direction else playerX - 30])
+                        shottime = time.time()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    playerX_change = 0
 
-        # if keystroke is pressed check whether its right or left
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                playerImg = player_left
-                direction = False
-                playerX_change = -0.6
-            if event.key == pygame.K_RIGHT:
-                playerImg = player_right
-                direction = True
-                playerX_change = 0.6
-            if event.key == pygame.K_SPACE:
-                if time.time() - shottime > 0.4:
-                    print("shot")
-                    screen.blit(bulletright if direction else bulletleft,
-                                (playerX + 128 if direction else playerX - 30, 550))
-                    bullets.append([direction, playerX + 128 if direction else playerX - 30])
-                    shottime = time.time()
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                playerX_change = 0
+        playerX += playerX_change
 
-    playerX += playerX_change
+        if playerX <= 0:
+            playerX = 0
+        elif playerX >= 952:
+            playerX = 952
 
-    if playerX <= 0:
-        playerX = 0
-    elif playerX >= 952:
-        playerX = 952
+        # Enemy movement
+        i = 0
+        for asteroids in asteroidX:
+            # Meteor Hits
+            if asteroidY[i] > 520:
+                explosionX.append(asteroidX[i])
+                explosionTime.append([time.time(), asteroidX[i]])
+                asteroidY.remove(asteroidY[i])
+                asteroidX.remove(asteroidX[i])
+                i += 1
+                asteroidX.append(random.randint(0, 824))
+                asteroidY.append(random.randint(0, 150))
+                asteroidY_change.append(random.randint(20, 30) / 10)
 
-    # Enemy movement
-    i = 0
-    for asteroids in asteroidX:
-        # Meteor Hits
-        if asteroidY[i] > 520:
-            explosionX.append(asteroidX[i])
-            explosionTime.append([time.time(), asteroidX[i]])
-            asteroidY.remove(asteroidY[i])
-            asteroidX.remove(asteroidX[i])
-            i += 1
-            asteroidX.append(random.randint(0, 824))
-            asteroidY.append(random.randint(0, 150))
-            asteroidY_change.append(random.randint(20, 30) / 10)
-
+            else:
+                asteroid(asteroidX[i], asteroidY[i])
+                asteroidY[i] += asteroidY_change[i]
+        for timestamp in explosionTime:
+            if time.time() - timestamp[0] >= 3:
+                explosionTime.remove(timestamp)
+                explosionX.remove(timestamp[1])
+            else:
+                if timestamp[1] < playerX + 100 < timestamp[1] + 200:
+                    death()
+                    break
+        if len(explosionX) <= 0:
+            pass
         else:
-            asteroid(asteroidX[i], asteroidY[i])
-            asteroidY[i] += asteroidY_change[i]
-    for timestamp in explosionTime:
-        if time.time() - timestamp[0] >= 3:
-            explosionTime.remove(timestamp)
-            explosionX.remove(timestamp[1])
+            for explosions in explosionX:
+                explosion(explosions, 500)
+        if len(bullets) <= 0:
+            pass
         else:
-            if timestamp[1] < playerX + 100 < timestamp[1] + 200:
+            for x in bullets:
+                if x[1] >= 1080 or x[1] <= 0:
+                    bullets.remove(x)
+                else:
+                    screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
+                    x[1] = x[1] + 3 if x[0] else x[1] - 3
+                for i in range(6):
+                    if aliens[i][0] < x[1] < aliens[i][0] + 80:
+                        aliens.remove(aliens[i])
+                        print(bullets)
+                        print(x)
+                        bullets.remove(x)
+                        startloc = alien_starting_location[random.randint(0, 1)]
+                        if startloc == 0:
+                            change = random.randint(1, 2) / 10
+                        elif startloc == 1000:
+                            change = random.randint(1, 2) / -10
+                        aliens.append([startloc, change])
+                        break
+        for thing in aliens:
+            if playerX < thing[0] < playerX + 128:
                 death()
                 break
-    if len(explosionX) <= 0:
-        pass
+        for i in range(num_of_aliens):
+            alien(aliens[i][0], 530)
+            aliens[i][0] += aliens[i][1]
+        show_score(0, 0)
+        player(playerX, playerY)
+        pygame.display.update()
     else:
-        for explosions in explosionX:
-            explosion(explosions, 500)
-    if len(bullets) <= 0:
-        pass
-    else:
-        for x in bullets:
-            if x[1] >= 1080 or x[1] <= 0:
-                bullets.remove(x)
-            else:
-                screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
-                x[1] = x[1] + 3 if x[0] else x[1] - 3
-            for i in range(6):
-                if aliens[i][0] < x[1] < aliens[i][0] + 80:
-                    aliens.remove(aliens[i])
-                    print(bullets)
-                    print(x)
-                    bullets.remove(x)
-                    startloc = alien_starting_location[random.randint(0, 1)]
-                    if startloc == 0:
-                        change = random.randint(1, 2) / 10
-                    elif startloc == 1000:
-                        change = random.randint(1, 2) / -10
-                    aliens.append([startloc, change])
-                    break
-    for thing in aliens:
-        if playerX < thing[0] < playerX + 128:
-            death()
-            break
-    for i in range(num_of_aliens):
-        alien(aliens[i][0], 530)
-        aliens[i][0] += aliens[i][1]
-    show_score(0, 0)
-    player(playerX, playerY)
-    pygame.display.update()
+        screen.blit(deathscreen, (0, 0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                print(pos)
+                x = pos[0]
+                y = pos[1]
+                if 231 < x < 910 and 415 < y < 585:
+                    alive = True
+                    aliens = []
+                    for i in range(num_of_aliens):
+                        startloc = alien_starting_location[random.randint(0, 1)]
+                        if startloc == 0:
+                            change = random.randint(1, 2) / 10
+                        else:
+                            change = random.randint(1, 2) / -10
+                        aliens.append([startloc, change])
+                    playerX = 555
+                    playerY = 500
+                    playerX_change = 0
+                    asteroidX = []
+                    asteroidY = []
+                    asteroidY_change = []
+                    explosionTime = []
+                    explosionX = []
+                    bullets = []
+                    asteroidX.append(random.randint(0, 824))
+                    asteroidY.append(random.randint(0, 150))
+                    asteroidY_change.append(random.randint(2, 3) / 10)
+                    starttime = time.time()
