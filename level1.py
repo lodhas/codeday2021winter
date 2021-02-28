@@ -169,7 +169,5 @@ while running:
         alien(alienX[i], alienY)
         alienX[i] += alienX_change[i]
 
-hello = True
-
     player(playerX, playerY)
     pygame.display.update()
