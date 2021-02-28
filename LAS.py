@@ -17,7 +17,6 @@ pygame.display.set_icon(icon)
 backgroundImg = pygame.image.load("Background.jpg")
 background = pygame.transform.scale(backgroundImg, (1380, 620))
 
-
 # Player
 playerImg1 = pygame.image.load('player.png')
 player_right = pygame.transform.scale(playerImg1, (128, 128))
@@ -59,7 +58,6 @@ asteroidX.append(random.randint(0, 824))
 asteroidY.append(random.randint(0, 150))
 asteroidY_change.append(random.randint(2, 3) / 10)
 
-
 # score
 
 font = pygame.font.Font('freesansbold.ttf', 32)
@@ -72,7 +70,7 @@ over_font = font = pygame.font.Font('freesansbold.ttf', 64)
 
 
 def getscore():
-    score_value = int((time.time() - start)*100//1)
+    score_value = int((time.time() - start) * 100 // 1)
     return score_value
 
 
@@ -167,8 +165,6 @@ while running:
                 death()
             break
 
-
-
     if len(explosionX) <= 0:
         pass
     else:
@@ -178,7 +174,6 @@ while running:
     for i in range(num_of_aliens):
         alien(alienX[i], alienY)
         alienX[i] += alienX_change[i]
-
 
     show_score(0, 0)
     player(playerX, playerY)

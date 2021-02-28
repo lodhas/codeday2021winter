@@ -11,6 +11,10 @@ pygame.display.set_caption("SpacEscape")
 icon = pygame.image.load('player.png')
 pygame.display.set_icon(icon)
 
+# background sound
+pygame.mixer.music.load('background.mp3')
+pygame.mixer.music.play(-1)
+
 # background
 backgroundImg = pygame.image.load("Background.jpg")
 background = pygame.transform.scale(backgroundImg, (1380, 620))
@@ -84,6 +88,7 @@ def show_score(x, y):
     score_value = getscore()
     score = font.render("Score: " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
+    print("change")
 
 
 def player(x, y):
@@ -111,8 +116,9 @@ def death():
     return
 
 
-running = True
+
 direction = False
+running = True
 shottime = 0
 while running:
     start = time.time()
@@ -202,6 +208,8 @@ while running:
                         change = random.randint(1, 2) / -10
                     aliens.append([startloc, change])
                     break
+
+
     for thing in aliens:
         if playerX < thing[0] < playerX + 128:
             death()
