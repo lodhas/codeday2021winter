@@ -35,7 +35,7 @@ for i in range(num_of_aliens):
     startloc = alien_starting_location[random.randint(0, 1)]
     if startloc == 0:
         change = random.randint(1, 2) / 10
-    elif startloc == 1000:
+    else:
         change = random.randint(1, 2) / -10
     aliens.append([startloc, change])
 
