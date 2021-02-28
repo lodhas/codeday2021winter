@@ -179,8 +179,10 @@ while running:
                         change = random.randint(2, 4) / -10
                     aliens.append([startloc, change])
                     break
-
-
+    for thing in aliens:
+        if playerX < thing[0] < playerX + 128:
+            death()
+            break
     for i in range(num_of_aliens):
         alien(aliens[i][0], 530)
         aliens[i][0] += aliens[i][1]
