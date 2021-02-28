@@ -52,11 +52,6 @@ explosionX = []
 explosionImg1 = pygame.image.load('explosion.png')
 explosionImg = pygame.transform.scale(explosionImg1, (100, 100))
 
-bullet = pygame.image.load("bullet.png")
-bulletleft = pygame.transform.rotate(bullet, 90)
-bulletright = pygame.transform.rotate(bullet, -90)
-bullets = []
-
 asteroidX.append(random.randint(0, 824))
 asteroidY.append(random.randint(0, 150))
 asteroidY_change.append(random.randint(2, 3) / 10)
@@ -68,11 +63,12 @@ def player(x, y):
 
 
 def alien(x, y):
+    print("entered function")
     screen.blit(alienImg, (x, y))
     return
 
 
-def asteroid(x, y):
+def asteroid(x, y, i):
     screen.blit(asteroidImg, (x, y))
     return
 
@@ -88,8 +84,7 @@ def death():
 
 
 running = True
-direction = False
-shottime = 0
+
 while running:
     screen.blit(background, (-100, 0))
 
@@ -101,19 +96,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 playerImg = player_left
-                direction = False
                 playerX_change = -0.6
             if event.key == pygame.K_RIGHT:
                 playerImg = player_right
-                direction = True
                 playerX_change = 0.6
-            if event.key == pygame.K_SPACE:
-                if time.time() - shottime > 0.5:
-                    print("shot")
-                    screen.blit(bulletright if direction else bulletleft,
-                                (playerX + 128 if direction else playerX - 30, 550))
-                    bullets.append([direction, playerX + 128 if direction else playerX - 30])
-                    shottime = time.time()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
@@ -140,7 +126,7 @@ while running:
             asteroidY_change.append(random.randint(20, 30) / 10)
 
         else:
-            asteroid(asteroidX[i], asteroidY[i])
+            asteroid(asteroidX[i], asteroidY[i], i)
             asteroidY[i] += asteroidY_change[i]
     for timestamp in explosionTime:
         if time.time() - timestamp[0] >= 3:
@@ -155,15 +141,6 @@ while running:
     else:
         for explosions in explosionX:
             explosion(explosions, 500)
-    if len(bullets) <= 0:
-        pass
-    else:
-        for x in bullets:
-            if x[1] >= 1080 or x[1] <= 0:
-                bullets.remove(x)
-            else:
-                screen.blit(bulletright if x[0] else bulletleft, (x[1] + 3 if x[0] else x[1] - 3, 550))
-                x[1] = x[1] + 3 if x[0] else x[1] - 3
 
     for i in range(num_of_aliens):
         alien(alienX[i], alienY)
