@@ -75,7 +75,7 @@ bullets = []
 
 asteroidX.append(random.randint(0, 824))
 asteroidY.append(random.randint(0, 150))
-asteroidY_change.append(random.randint(2, 3) / 10)
+asteroidY_change.append(random.randint(6, 10) / 10)
 
 # score
 
@@ -245,7 +245,7 @@ while running:
                 i += 1
                 asteroidX.append(random.randint(0, 824))
                 asteroidY.append(random.randint(0, 150))
-                asteroidY_change.append(random.randint(20, 30) / 10)
+                asteroidY_change.append(random.randint(6, 10) / 10)
 
             else:
                 asteroid(asteroidX[i], asteroidY[i])
@@ -328,5 +328,5 @@ while running:
                     bullets = []
                     asteroidX.append(random.randint(0, 824))
                     asteroidY.append(random.randint(0, 150))
-                    asteroidY_change.append(random.randint(2, 3) / 10)
+                    asteroidY_change.append(random.randint(6, 10) / 10)
                     starttime = time.time()
